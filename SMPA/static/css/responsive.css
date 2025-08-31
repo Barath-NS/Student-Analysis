@@ -1,0 +1,56 @@
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .file-upload {
+        padding: 2rem 1rem;
+        min-height: 150px;
+    }
+    
+    .file-upload-icon {
+        font-size: 2rem;
+    }
+    
+    .logo {
+        font-size: 1.25rem;
+    }
+    
+    .logo i {
+        font-size: 1.5rem;
+    }
+    
+    .chatbot-container {
+        width: calc(100vw - 2rem);
+        height: calc(100vh - 4rem);
+        right: 1rem;
+        bottom: 1rem;
+    }
+    
+    .chatbot-toggle {
+        right: 1rem;
+        bottom: 1rem;
+    }
+}
