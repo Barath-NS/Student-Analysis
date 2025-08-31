@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance AI - Advanced Analytics Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    
+    <!-- Custom CSS Files -->
+    <link rel="stylesheet" href="/static/css/variables.css">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/components.css">
+    <link rel="stylesheet" href="/static/css/pages.css">
+    <link rel="stylesheet" href="/static/css/chatbot.css">
+    <link rel="stylesheet" href="/static/css/responsive.css">
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>Student Performance AI</span>
+                </a>
+                <nav class="nav">
+                    <ul class="nav-links">
+                        <li><a href="#" class="nav-link active" data-page="upload">Dashboard</a></li>
+                        <li><a href="#" class="nav-link" data-page="students">Students</a></li>
+                        <li><a href="#" class="nav-link" data-page="analytics">Analytics</a></li>
+                    </ul>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Upload/Dashboard Page -->
+            <div id="uploadPage" class="page active">
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-upload"></i>
+                        </div>
+                        <div class="stat-value" id="exam1Count">0</div>
+                        <div class="stat-label">Exam 1 Records</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="stat-value" id="modelsCount">0/5</div>
+                        <div class="stat-label">Models Trained</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-value" id="predictionsCount">0</div>
+                        <div class="stat-label">Predictions Generated</div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Exam 1 Upload -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-upload"></i>
+                                Upload Exam 1 Data
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="file-upload" id="exam1Upload">
+                                <input type="file" id="exam1File" accept=".csv,.xlsx,.xls" aria-label="Choose Exam 1 file">
+                                <div class="file-upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <div class="file-upload-text">Drop your Exam 1 file here</div>
+                                <div class="file-upload-hint">or click to browse (CSV, Excel)</div>
+                            </div>
+                            <div class="progress hidden" id="exam1Progress">
+                                <div class="progress-bar" id="exam1ProgressBar"></div>
+                            </div>
+                            <button class="btn btn-primary btn-block" id="uploadExam1Btn" disabled>
+                                <i class="fas fa-upload"></i>
+                                Upload Exam 1 Data
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Model Training -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-cogs"></i>
+                                Train Prediction Models
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Train AI models to predict Exam 2 performance based on Exam 1 results.</p>
+                            <div class="progress hidden" id="trainingProgress">
+                                <div class="progress-bar" id="trainingProgressBar"></div>
+                            </div>
+                            <button class="btn btn-success btn-block" id="trainModelsBtn" disabled>
+                                <i class="fas fa-robot"></i>
+                                Train Models
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exam 2 Prediction -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Generate Exam 2 Predictions
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="file-upload" id="exam2Upload">
+                            <input type="file" id="exam2File" accept=".csv,.xlsx,.xls" aria-label="Choose Exam 2 file">
+                            <div class="file-upload-icon">
+                                <i class="fas fa-magic"></i>
+                            </div>
+                            <div class="file-upload-text">Drop your Exam 2 student IDs here</div>
+                            <div class="file-upload-hint">or click to browse (CSV, Excel)</div>
+                        </div>
+                        <div class="progress hidden" id="predictionProgress">
+                            <div class="progress-bar" id="predictionProgressBar"></div>
+                        </div>
+                        <button class="btn btn-primary btn-block" id="predictExam2Btn" disabled>
+                            <i class="fas fa-crystal-ball"></i>
+                            Generate Predictions
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Page -->
+            <div id="studentsPage" class="page">
+                <div class="student-search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="student-search" id="studentSearch" 
+                           placeholder="Search for a student by ID..." autocomplete="off">
+                    <div class="search-results hidden" id="searchResults"></div>
+                </div>
+
+                <div id="studentDetails" class="hidden">
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title" id="studentTitle">Student Performance</h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="performanceChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Subject Breakdown</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-container">
+                                    <table class="table" id="marksTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Subject</th>
+                                                <th>Exam 1</th>
+                                                <th>Predicted Exam 2</th>
+                                                <th>Difference</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Performance Analysis</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="performanceInsights"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Page -->
+            <div id="analyticsPage" class="page">
+                <h2 style="margin-bottom: 2rem; color: var(--text-primary);">Analytics Dashboard</h2>
+                
+                <!-- Analytics Not Available State -->
+                <div id="analyticsNotAvailable" class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    Analytics features will be available after uploading and processing your data.
+                </div>
+
+                <!-- Analytics Available State -->
+                <div id="analyticsAvailable" class="hidden">
+                    <!-- Overview Stats -->
+                    <div class="dashboard-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-value" id="totalStudentsAnalytics">0</div>
+                            <div class="stat-label">Total Students</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="stat-value" id="avgImprovement">+0.0%</div>
+                            <div class="stat-label">Avg. Improvement</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-medal"></i>
+                            </div>
+                            <div class="stat-value" id="topPerformers">0</div>
+                            <div class="stat-label">Top Performers</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-value" id="needsAttention">0</div>
+                            <div class="stat-label">Needs Attention</div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="dashboard-grid">
+                        <!-- Overall Performance Distribution -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-chart-bar"></i>
+                                    Performance Distribution
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="performanceDistributionChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Subject Comparison -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-balance-scale"></i>
+                                    Subject Comparison
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="subjectComparisonChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Improvement Trends -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-trending-up"></i>
+                                Improvement Trends by Subject
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="improvementTrendsChart" width="400" height="300"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Performance Categories -->
+                    <div class="dashboard-grid">
+                        <!-- Grade Distribution -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-chart-pie"></i>
+                                    Grade Distribution
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="gradeDistributionChart" width="400" height="200"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Top & Bottom Performers -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <i class="fas fa-list-ol"></i>
+                                    Performance Rankings
+                                </h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-container">
+                                    <table class="table" id="performanceRankingsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Rank</th>
+                                                <th>Student ID</th>
+                                                <th>Avg Score</th>
+                                                <th>Improvement</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Insights Section -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-lightbulb"></i>
+                                Key Insights & Recommendations
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="analyticsInsights"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Chatbot Interface -->
+    <button class="chatbot-toggle" id="chatbotToggle" aria-label="Open AI Assistant">
+        <i class="fas fa-robot"></i>
+    </button>
+
+    <div class="chatbot-container" id="chatbotContainer">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <i class="fas fa-robot"></i>
+                <span>AI Assistant</span>
+                <div class="chatbot-status"></div>
+            </div>
+            <button class="chatbot-close" id="chatbotClose" aria-label="Close chat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="chat-message bot">
+                <div class="chat-avatar bot">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <div class="message-content">
+                        Hello! I'm your AI assistant for student performance analytics. I can help you with:
+                        <br><br>
+                        • Student performance queries<br>
+                        • Analytics insights<br>
+                        • Data recommendations<br>
+                        • Platform guidance
+                        <br><br>
+                        How can I help you today?
+                    </div>
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chatbot-input-container">
+            <div class="chat-suggestions" id="chatSuggestions">
+                <div class="suggestion-chip">How is Student 123 performing?</div>
+                <div class="suggestion-chip">Show analytics summary</div>
+                <div class="suggestion-chip">Which subjects need attention?</div>
+                <div class="suggestion-chip">Top performing students</div>
+            </div>
+            <div class="chatbot-input-wrapper">
+                <input type="text" class="chatbot-input" id="chatbotInput" 
+                       placeholder="Ask me anything about student performance..." autocomplete="off">
+                <button class="chatbot-send" id="chatbotSend" aria-label="Send message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/analytics.js"></script>
+    <script src="/static/js/chatbot.js"></script>
+    <script src="/static/js/charts.js"></script>
+    <script src="/static/js/utils.js"></script>
+</body>
+</html>
